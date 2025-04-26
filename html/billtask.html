@@ -1,0 +1,132 @@
+<html>
+    <head>
+        <title>bakery bill</title>
+        <style>
+            h1 {
+                
+                text-align: center;
+                padding: 10px;
+                border-radius: 15px;
+                color:black;
+                margin-bottom:30px;
+               
+            }
+        
+            h2 {
+                color:steelblue;
+                margin-bottom: 10px;
+            }
+        
+            table {
+                border-collapse: collapse;
+                width: 50%;
+                margin: 0 auto 30px auto;
+                
+            }
+        
+            th, td {
+                border: 1px solid #ccc;
+                padding: 10px;
+                text-align: center;
+            }
+        
+            th {
+                background-color:lightblue;
+                color: black;
+                font-weight: bold;
+            }
+            
+            tr:nth-child(even) {
+                background-color:aliceblue;
+            }
+          
+        
+            tr:last-child td {
+                font-weight: bold;
+            }
+        
+         
+        </style>
+        
+    </head>
+    <body>
+        <h1 style="text-align: center;">Bakery Bill</h1>
+        <div id ="allBills"></div>
+
+
+        <script>
+             function calculateTotal(quantity,price){
+                return quantity*price;
+             }  
+             function discount(total , discount=0.1){
+                return total*discount;
+             }
+             function generateBill(userName,items){
+                let total = 0;
+                let item = `<div><h2>Customer: ${userName}</h2><table>
+                    <tr><th>Item</th><th>Quantity</th><th>Price</th><th>Subtotal</th></tr>`;
+
+                    items.forEach(product =>{
+                        const subtotal = calculateTotal(product.quantity,product.price);
+                        total += subtotal;
+                        item += `<tr>
+                            <td>${product.name}</td>
+                            <td>${product.quantity}</td>
+                            <td>${product.price}</td>
+                            <td>${subtotal}</td>
+                            </tr>`;
+                        });
+                        const discountprice = discount(total);
+                        const finalAmount = total - discountprice;
+
+                        item += `
+                         <tr><td colspan="3">Total</td><td>${total}</td></tr>
+                         <tr><td colspan="3">Discount of 10%</td><td>${discountprice}</td></tr>
+                         <tr><td colspan="3">Final Amount</td><td>${finalAmount}</td></tr>
+                     </table></div>`;
+
+                     return item;
+             }
+               function bakeryBill(users) {
+                let outerHTML = " ";
+                users.forEach(user =>{
+                    outerHTML += generateBill(user.name, user.items);
+                });
+                document.getElementById('allBills').innerHTML = outerHTML;
+               }
+               const users=[
+                {
+                    name:"siri",
+                    items:[
+                    { name: 'cake', quantity: 1, price: 200},
+                    { name: 'puff', quantity: 3, price: 50},
+                    { name: 'Donut',quantity:4, price: 100},
+                    { name: 'drink',quantity:2, price: 30 }
+                    ]
+                },
+               {
+
+                    name: 'niha',
+                    items: [
+                    { name: 'Cupcake',quantity: 6,price:250 },
+                    { name: 'pizza',quantity: 4,price: 200 },
+                    { name: 'drinks',quantity: 2,price: 30 },
+                    { name: 'chocolates',quantity: 1,price:20 }
+                   ]
+                },
+                {
+
+                    name: 'rukku',
+                    items: [
+                    { name: 'burger',quantity: 2,price:250 },
+                    { name: 'pizza',quantity: 1,price: 200 },
+                    { name: 'drinks',quantity: 1,price: 30 },
+                    { name: 'milkshakes',quantity: 1,price:150 }
+                 ]
+                }
+            ];
+             bakeryBill(users); 
+         </script>
+         <h1>Thank You VisitAgain</h1>
+    </body>
+</html>
