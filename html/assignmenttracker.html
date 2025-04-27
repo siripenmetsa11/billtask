@@ -1,0 +1,118 @@
+<html>
+    <head>
+        <title>Assignment tracker</title>
+        <style>
+         body { 
+            font-family: Arial;
+             padding: 20px; 
+            }
+         input, button {
+             margin: 5px; 
+             padding: 8px; }
+    
+    table { 
+        border-collapse: collapse;
+        width: 70%; 
+        margin-top: 10px; 
+    }
+    th, td {
+         border: 1px solid #ccc;
+         padding: 8px; 
+         text-align: center; }
+    th {
+         background-color: #f2b8a0; 
+        }
+
+        </style>
+    </head>
+    <body>
+        <h2>📘 Assignment Tracker</h2>
+        <input type="text" id ="titleInput" placeholder="Assignment Title">
+        <input type="date" id="dateInput">
+        <button onclick="addAssignment()">Add Assignment</button>
+ 
+       
+            <h3>Pending Assignments</h3>
+            <ul id="pendingList"></ul>
+        
+            <h3>Overdue Assignments</h3>
+            <ul id="overdueList"></ul>
+    
+        <script>
+            let assignments= [];
+
+            function addAssignment(){
+                const title = document.getElementById("titleInput").value;
+                const dueDate = document.getElementById("dateInput").value;
+                if (title && dueDate){
+                    assignments.push({ title, dueDate, completed: false });
+                    document.getElementById("titleInput").value = "";
+                    document.getElementById("dateInput").value = "";
+                    updateDisplay();
+                } 
+            
+            }
+            function markComplete(title){
+                for(let i=0;i<assignments.length;i++){
+                    if(assignments[i].title ===title){
+                        assignments[i].completed=true;
+                        break;
+                    }
+                }
+                updateDisplay();
+            } 
+            function getPendingAssignments(){
+                const result = [];
+                for (let i = 0; i < assignments.length; i++){
+                    const a =assignments[i];
+                    if (!a.completed && new Date(a.dueDate) >= new Date()) {
+                        result.push(a);
+                    }
+                }
+                return result;
+            }
+            function getOverdueAssignments(){
+                const result=[];
+                const today=new Date();
+                for (let i = 0; i < assignments.length; i++) {
+                    const a = assignments[i];
+                    if (!a.completed && new Date(a.dueDate) < today){
+                        result.push(a);
+                    }
+                }
+                return result;
+            }
+            function updateDisplay()
+            {
+                const pendingList = document.getElementById("pendingList");
+                const overdueList = document.getElementById("overdueList");
+                pendingList.innerHTML = "";
+                overdueList.innerHTML = "";
+
+                const pending = getPendingAssignments();
+                for (let i = 0; i < pending.length; i++){
+                    const li = document.createElement("li");
+                    li.textContent = `${pending[i].title} - due ${pending[i].dueDate}`;
+                    li.onclick = () => markComplete(pending[i].title);
+                    pendingList.appendChild(li);
+                }
+                const overdue = getOverdueAssignments();
+                for (let i = 0; i < overdue.length; i++){
+                    const li = document.createElement("li");
+                    li.classList.add("overdue");
+                    li.textContent = `${overdue[i].title} - was due ${overdue[i].dueDate}`;
+                    li.onclick = () => markComplete(overdue[i].title);
+                    overdueList.appendChild(li);
+
+                }
+            }
+        </script>
+    </body>
+</html>
+
+
+
+
+
+
+
