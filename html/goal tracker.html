@@ -1,0 +1,92 @@
+<html>
+    <head>
+        <title>Goal Tracker</title>
+        <style>
+            body{
+               background-color:burlywood;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 style="text-align: center">Personal Goal Tracker</h1>
+        <h3>Add a Goal</h3>
+        <input type="text" id="goalTitle" placeholder="Goal Title">
+        <input type="text" id="goalType" placeholder="Goal Type (e.g. Health)">
+        <input type="number" id="goalTarget" placeholder="Target Value">
+        <button onclick="addGoal()">Add Goal</button>
+    
+        <h3>Update Progress</h3>
+        <input type="text" id="progressTitle" placeholder="Goal Title">
+        <input type="number" id="progressValue" placeholder="Progress Value">
+        <button onclick="updateProgress()">Update Progress</button>
+
+        <h3>Check Progress</h3>
+        <input type="text" id="checkTitle" placeholder="Goal Title">
+        <button onclick="getProgress()">Get Progress</button>
+        <p id="progressOutput"></p>
+
+        <h3>Status & Motivation</h3>
+        <button onclick="checkStatusAndMotivate()">Check Status</button>
+        <ul id="motivationOutput"></ul>
+
+        <script>
+            let goals = [ ];
+            function addGoal(title = null, type = null, targetValue = null) {
+                title = title || document.getElementById('goalTitle').value;
+                type = type || document.getElementById('goalType').value;
+                targetValue = targetValue || parseFloat(document.getElementById('goalTarget').value);
+
+                if (title && type && !isNaN(targetValue)) {
+                    goals.push({ title, type, targetValue, progress: 0 });
+                    alert("Goal added!");
+                }
+            }
+
+            function updateProgress() {
+                 let goalTitle = document.getElementById('progressTitle').value;
+                 let value = parseFloat(document.getElementById('progressValue').value);
+
+                 for (let i = 0; i < goals.length; i++) {
+                    if (goals[i].title === goalTitle) {
+                        goals[i].progress += value;
+                        alert("Progress updated!");
+                        return;
+                    }
+                }
+                alert("Goal not found.");
+            }
+
+            function getProgress() {
+                let goalTitle = document.getElementById('checkTitle').value;
+                for (let i = 0; i < goals.length; i++) {
+                    if (goals[i].title === goalTitle) {
+                        let percent = (goals[i].progress / goals[i].targetValue) * 100;
+                        document.getElementById('progressOutput').textContent = `Progress for "${goalTitle}": ${percent.toFixed(1)}%`;
+                         return;
+                    }
+                }
+                document.getElementById('progressOutput').textContent = "Goal not found.";
+            }
+
+            function checkStatusAndMotivate() {
+                let output = document.getElementById('motivationOutput');
+                output.innerHTML = "";
+
+                for (let i = 0; i < goals.length; i++) {
+                    let g = goals[i];
+                    let percent = (g.progress / g.targetValue) * 100;
+                    let msg = document.createElement("li"); 
+
+                    if (percent < 50) {
+                        msg.textContent = `Keep pushing on "${g.title}" (${percent.toFixed(1)}%)  You've got this!`;
+                    } else if (percent < 100) {
+                        msg.textContent = `"${g.title}" is on track (${percent.toFixed(1)}%) Almost there!`;
+                    } else {
+                        msg.textContent = `Congratulations on completing "${g.title}"!`;
+        }
+        output.appendChild(msg);
+      }
+}
+        </script>
+    </body>
+</html>
